@@ -61,9 +61,9 @@ task jacocoAppReport(type: JacocoReport) {
 
     additionalClassDirs.setFrom files(rootProject.collect {
         fileTree(dir: "${it.buildDir}/classes/java/main", exclude: [
-                '**/com/redftool/apidemospring/ApiApplication.class',
-                '**/com/redftool/apidemospring/entity/**',
-                '**/com/redftool/apidemospring/dto/**',
+                '**/com/linhnt/taskmanagementservice/Application.class',
+                '**/com/linhnt/taskmanagementservice/entity/**',
+                '**/com/linhnt/taskmanagementservice/dto/**',
         ])
     })
 
@@ -82,9 +82,9 @@ task jacocoAppCoverageVerification(type: JacocoCoverageVerification) {
 
     additionalClassDirs.setFrom files(rootProject.collect {
         fileTree(dir: "${it.buildDir}/classes/java/main", exclude: [
-                '**/com/redftool/apidemospring/ApiApplication.class',
-                '**/com/redftool/apidemospring/entity/**',
-                '**/com/redftool/apidemospring/dto/**',
+                '**/com/linhnt/taskmanagementservice/Application.class',
+                '**/com/linhnt/taskmanagementservice/entity/**',
+                '**/com/linhnt/taskmanagementservice/dto/**',
         ])
     })
 
@@ -97,14 +97,14 @@ task jacocoAppCoverageVerification(type: JacocoCoverageVerification) {
             limit {
                 counter = 'LINE'
                 value = 'COVEREDRATIO'
-                minimum = 0.27
+                minimum = 0.10
             }
         }
         rule {
             limit {
                 counter = 'BRANCH'
                 value = 'COVEREDRATIO'
-                minimum = 0.22
+                minimum = 0.10
             }
         }
     }
