@@ -36,8 +36,10 @@ public class TaskServiceImpl implements TaskService {
         }
         TaskEntity taskEntity = ObjectMapperUtil.map(request, TaskEntity.class);
         if (request.getBug() != null) {
+            taskEntity.setTaskType(TaskType.BUG);
             ObjectMapperUtil.map(request.getBug(), taskEntity);
         } else {
+            taskEntity.setTaskType(TaskType.FEATURE);
             ObjectMapperUtil.map(request.getFeature(), taskEntity);
         }
         taskEntity.setDeleteFlag(false);

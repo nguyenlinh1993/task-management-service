@@ -1,4 +1,4 @@
-package com.linhnt.taskmanagementservice.advice;
+package com.linhnt.taskmanagementservice.config.advice;
 
 import com.linhnt.taskmanagementservice.dto.core.ErrorDto;
 import com.linhnt.taskmanagementservice.dto.exception.ApiBadRequestException;
