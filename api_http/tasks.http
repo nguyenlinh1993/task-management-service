@@ -1,0 +1,66 @@
+### T0001 - Create task (type bug)
+POST http://localhost:8080/api/v1/tasks
+Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "Task 1",
+  "userId": 1,
+  "bug": {
+    "severity": 1,
+    "stepsToReproduce": "Description for bug"
+  }
+}
+
+### T0001 - Create task (type feature)
+POST http://localhost:8080/api/v1/tasks
+Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "Task 2",
+  "userId": 1,
+  "feature": {
+    "businessValue": "Description for value",
+    "deadline": "2025-01-01"
+  }
+}
+
+### T0002 - Get tasks
+GET http://localhost:8080/api/v1/tasks
+Accept: application/json
+Content-Type: application/json
+
+
+### T0002 - Search tasks
+GET http://localhost:8080/api/v1/tasks?status=OPEN&userId=1&name=Task
+Accept: application/json
+Content-Type: application/json
+
+
+### T0003 - Get task
+GET http://localhost:8080/api/v1/tasks/1
+Accept: application/json
+Content-Type: application/json
+
+
+### T0004 - Update task
+PUT http://localhost:8080/api/v1/tasks/1
+Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "Task 3",
+  "status": "OPEN",
+  "userId": 1,
+  "bug": {
+    "severity": 1,
+    "stepsToReproduce": "Description for bug"
+  }
+}
+
+
+### T0005 - Delete task
+DELETE http://localhost:8080/api/v1/tasks/1
+Accept: application/json
+Content-Type: application/json
