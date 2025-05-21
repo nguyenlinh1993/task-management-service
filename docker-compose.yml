@@ -33,6 +33,15 @@ services:
       - "8080:8080"
     networks:
       - tms-network
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    container_name: swagger-ui
+    environment:
+      SWAGGER_JSON_URL: /swagger.yaml
+    ports:
+      - "8081:8080"
+    volumes:
+      - ./api_document/swagger.yaml:/usr/share/nginx/html/swagger.yaml
 
 volumes:
   postgres_data:
