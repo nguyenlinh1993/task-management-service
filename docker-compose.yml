@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  postgres:
+    container_name: postgres-app
+    image: postgres:16.1-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: tms
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - tms-network
+
+  app:
+    container_name: task-management-service
+    image: task-management-service:latest
+    restart: no
+    environment:
+      SPRING_PROFILE: dev
+      PORT: 8080
+      TZ: GMT+9
+      DB_PASSWORD: root
+      DB_USERNAME: root
+      DB_URL: jdbc:postgresql://postgres:5432/tms
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+    networks:
+      - tms-network
+
+volumes:
+  postgres_data:
+
+networks:
+  tms-network:
+    driver: bridge

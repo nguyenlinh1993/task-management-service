@@ -1,0 +1,148 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.4.5'
+    id 'io.spring.dependency-management' version '1.1.7'
+    id("checkstyle")
+    id("com.github.spotbugs") version "5.0.14"
+    id "pmd"
+    id("jacoco")
+}
+
+group = 'com.linhnt'
+version = '0.0.1-SNAPSHOT'
+
+
+checkstyle {
+    toolVersion = "10.21.4"
+    configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
+    ignoreFailures = false
+    maxWarnings = 0
+}
+
+spotbugs {
+    toolVersion = '4.8.3'
+    ignoreFailures = false
+    effort = 'max'
+    reportLevel = 'high'
+}
+
+pmd {
+    toolVersion = "7.0.0"
+    ignoreFailures = false
+    ruleSetFiles("./config/pmd/pmd-ruleset.xml")
+}
+
+tasks.withType(com.github.spotbugs.snom.SpotBugsTask) {
+    reports {
+        xml.required = true
+        html.required = true
+    }
+}
+
+tasks.withType(Pmd) {
+    reports {
+        xml.required = true
+        html.required = true
+    }
+}
+
+jacoco {
+    toolVersion = "0.8.10"
+}
+task jacocoAppReport(type: JacocoReport) {
+    group = "Reporting"
+    description = "Generate a consolidated JaCoCo report for all modules"
+
+    reports {
+        xml.required = true
+    }
+
+    executionData.setFrom fileTree(dir: "$buildDir", includes: ["jacoco/test.exec"])
+
+    additionalClassDirs.setFrom files(rootProject.collect {
+        fileTree(dir: "${it.buildDir}/classes/java/main", exclude: [
+                '**/com/redftool/apidemospring/ApiApplication.class',
+                '**/com/redftool/apidemospring/entity/**',
+                '**/com/redftool/apidemospring/dto/**',
+        ])
+    })
+
+    sourceDirectories.setFrom files(rootProject.collect {
+        it.sourceSets.main.allSource.srcDirs
+    })
+
+    dependsOn ":test"
+}
+
+task jacocoAppCoverageVerification(type: JacocoCoverageVerification) {
+    group = "Verification"
+    description = "Verify coverage ratios for all modules"
+
+    executionData.setFrom fileTree(dir: "$buildDir", includes: ["**/jacoco/test.exec"])
+
+    additionalClassDirs.setFrom files(rootProject.collect {
+        fileTree(dir: "${it.buildDir}/classes/java/main", exclude: [
+                '**/com/redftool/apidemospring/ApiApplication.class',
+                '**/com/redftool/apidemospring/entity/**',
+                '**/com/redftool/apidemospring/dto/**',
+        ])
+    })
+
+    sourceDirectories.setFrom files(rootProject.collect {
+        it.sourceSets.main.allSource.srcDirs
+    })
+
+    violationRules {
+        rule {
+            limit {
+                counter = 'LINE'
+                value = 'COVEREDRATIO'
+                minimum = 0.27
+            }
+        }
+        rule {
+            limit {
+                counter = 'BRANCH'
+                value = 'COVEREDRATIO'
+                minimum = 0.22
+            }
+        }
+    }
+
+    dependsOn ":test"
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.modelmapper:modelmapper:3.2.0'
+    compileOnly 'org.projectlombok:lombok'
+    runtimeOnly 'org.postgresql:postgresql'
+    runtimeOnly 'org.flywaydb:flyway-database-postgresql:10.20.0'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-testcontainers'
+    testImplementation "org.testcontainers:postgresql:1.21.0"
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
