@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: task-management-service
+  jackson:
+    time-zone: GMT+7
+  profiles:
+    active: test
+  datasource:
+    url: jdbc:postgresql://localhost:5432/tms
+    username: root
+    password: root
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+
+server:
+  port: 8081
